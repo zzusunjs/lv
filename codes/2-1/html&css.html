@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>使用html and css进行可视化</title>
     <style>
-        html, body{
+        html,
+        body {
             margin: 0;
             padding: 0;
             height: 100%;
@@ -15,36 +17,80 @@
             align-items: center;
             justify-content: center;
         }
-        .outter{
+
+        .outter {
             height: 100%;
             width: 100%;
-            
+
         }
-        .top, .bottom{
+
+        .top,
+        .bottom {
             height: 50%;
             width: 100%;
         }
-        .left, .right{
+
+        .left,
+        .middle,
+        .right {
             float: left;
             width: 33%;
             height: 100%;
-            background-color: #ccc;
-        }
-        .middle {
-            float: left;
-            width: 34%;
-            height: 100%;
             background-color: #fff;
+            border: 1px dotted black;
         }
-        
+
+        .barchart {
+            display: grid;
+            width: 40%;
+            height: 90%;
+            padding: 20px;
+            grid-template-columns: repeat(5, 15%);
+            /* grid布局方法 http://www.ruanyifeng.com/blog/2019/03/grid-layout-tutorial.html */
+        }
+
+        .barchart div {
+            margin: 0 3px;
+            /* background: linear-gradient(to bottom, transparent 50%, #37c 0, #37c 70%, #3c7 0); */
+        }
+
+        .barchart div:nth-child(1) {
+            background: linear-gradient(to bottom, transparent 50%, #37c 50%, #37c 70%, #3c7 70%, #3c7 80%, orange 0%);
+        }
+
+        .barchart div:nth-child(2) {
+            background: linear-gradient(to bottom, transparent 40%, #37c 40%, #37c 60%, #3c7 60%, #3c7 70%, orange 0%);
+        }
+
+        .barchart div:nth-child(3) {
+            background: linear-gradient(to bottom, transparent 30%, #37c 30%, #37c 50%, #3c7 50%, #3c7 60%, orange 0%);
+        }
+
+        .barchart div:nth-child(4) {
+            background: linear-gradient(to bottom, transparent 20%, #37c 20%, #37c 40%, #3c7 40%, #3c7 50%, orange 0%);
+        }
+
+        .barchart div:nth-child(5) {
+            background: linear-gradient(to bottom, transparent 10%, #37c 10%, #37c 30%, #3c7 30%, #3c7 40%, orange 0%);
+        }
     </style>
 </head>
+
 <body>
     <!-- 2-1浏览器中实现可视化的四种方式 -->
     <div class="outter">
         <div class="top">
             <div class="left">
-                
+                <div class="barchart">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+                <div class="barchart_custom">
+
+                </div>
             </div>
             <div class="middle"></div>
             <div class="right"></div>
@@ -53,5 +99,88 @@
 
         </div>
     </div>
+    <script>
+        let data = {
+            protein: [40, 43, 44, 45, 50, 60, 66],
+            vegetable: [40, 50, 40, 40, 40, 40, 40],
+            carbohydrate: [20, 7, 16, 15, 10, 0, 4]
+        };
+
+        function deepCloneArray(source) {
+            if (Array.isArray(source) === false) {
+                throw "deepCloneArray: parameter not array"
+                return null;
+            }
+            return source.map(item => item);
+        }
+
+        let matrix = [];
+        for (let item in data) {
+            matrix.push(deepCloneArray(data[item]));
+        }
+        let sums = [], sum = 0;
+        for (let j = 0; j < matrix[0].length; ++j) {
+            sum = 0;
+            for (let i = 0; i < matrix.length; ++i) {
+                sum += matrix[i][j];
+            }
+            sums.push(sum);
+        }
+        let maxx = Math.max(...sums), ratios = [], inner = [];
+        for (let j = 0; j < matrix[0].length; ++j) {
+            inner = [(maxx - sums[j]) / maxx * 100];
+            for (let i = 0; i < matrix.length - 1; ++i) {
+                inner.push(matrix[i][j] / maxx * 100);
+            }
+            for (let z = 1; z < inner.length; ++z) {
+                inner[z] += inner[z - 1];
+            }
+            ratios.push(inner);
+        }
+
+        // 以上为计算数据
+        // 以下为操作DOM
+
+        let target = document.querySelector(".barchart_custom"),
+            fragement = document.createDocumentFragment();
+
+       
+
+        let colors = ['#37c', '#3c7', 'orange', '#ccc'];
+
+        ratios.forEach((item, idx) => {
+            let new_div = document.createElement("div");
+            let tmp = [`transparent ${item[0]}%`];
+            for (let i = 1; i < item.length - 1; ++i) {
+                tmp.push(`${colors[i % colors.length]} ${item[i - 1]}%`);
+                tmp.push(`${colors[i % colors.length]} ${item[i]}%`);
+            }
+            tmp.push(`${colors[(item.length - 1) % colors.length]} 0%`);
+
+            new_div.style.background = `linear-gradient(to bottom, ${tmp.join(",")})`;
+            new_div.style.margin = "0 3px";
+            
+            console.log(`linear-gradient(to bottom, ${tmp.join(",")})`);
+            console.log("new_div", new_div);
+            fragement.appendChild(new_div);
+        });
+
+        target.style.display = "grid";
+        target.style.width = "40%";
+        target.style.height = "90%";
+        target.style.padding = '20px';
+        target.style.gridTemplateColumns = `repeat(${ratios.length}, ${Math.floor(100 / ratios.length)}%)`;
+
+        console.log("fragement", fragement);
+
+        target.appendChild(fragement);
+
+
+
+
+
+
+    </script>
 </body>
+
 </html>
