@@ -46,6 +46,7 @@
             height: 90%;
             padding: 20px;
             grid-template-columns: repeat(5, 15%);
+            float: left;
             /* grid布局方法 http://www.ruanyifeng.com/blog/2019/03/grid-layout-tutorial.html */
         }
 
@@ -73,6 +74,8 @@
         .barchart div:nth-child(5) {
             background: linear-gradient(to bottom, transparent 10%, #37c 10%, #37c 30%, #3c7 30%, #3c7 40%, orange 0%);
         }
+        /* 线性渐变 https://developer.mozilla.org/zh-CN/docs/Web/CSS/CSS_Images/Using_CSS_gradients */
+        /* transparent 10% 表示 0到10% 的范围为透明, #37c 10%, #37c 30%表示10%到30%的范围为颜色#37c, orange 0%表示从上一个范围边界到100%为颜色 orange, 推测是一种简写方式。*/
     </style>
 </head>
 
@@ -101,9 +104,9 @@
     </div>
     <script>
         let data = {
-            protein: [40, 43, 44, 45, 50, 60, 66],
-            vegetable: [40, 50, 40, 40, 40, 40, 40],
-            carbohydrate: [20, 7, 16, 15, 10, 0, 4]
+            protein: [40, 43, 44, 45, 50, 60, 66, 70, 70, 70, 70],
+            vegetable: [40, 50, 40, 40, 40, 40, 40, 30, 30, 30, 30],
+            carbohydrate: [20, 7, 16, 15, 10, 0, 4, 10, 10, 10, 10]
         };
 
         function deepCloneArray(source) {
@@ -138,30 +141,28 @@
             ratios.push(inner);
         }
 
+        console.log("ratios", ratios);
+
         // 以上为计算数据
         // 以下为操作DOM
 
         let target = document.querySelector(".barchart_custom"),
             fragement = document.createDocumentFragment();
 
-       
-
         let colors = ['#37c', '#3c7', 'orange', '#ccc'];
 
         ratios.forEach((item, idx) => {
             let new_div = document.createElement("div");
             let tmp = [`transparent ${item[0]}%`];
-            for (let i = 1; i < item.length - 1; ++i) {
-                tmp.push(`${colors[i % colors.length]} ${item[i - 1]}%`);
-                tmp.push(`${colors[i % colors.length]} ${item[i]}%`);
+            for (let i = 1; i < item.length; ++i) {
+                tmp.push(`${colors[i % colors.length - 1]} ${item[i - 1]}%`);
+                tmp.push(`${colors[i % colors.length - 1]} ${item[i]}%`);
             }
-            tmp.push(`${colors[(item.length - 1) % colors.length]} 0%`);
+            tmp.push(`${colors[(item.length) % colors.length - 1]} 0%`);
 
-            new_div.style.background = `linear-gradient(to bottom, ${tmp.join(",")})`;
-            new_div.style.margin = "0 3px";
-            
-            console.log(`linear-gradient(to bottom, ${tmp.join(",")})`);
-            console.log("new_div", new_div);
+            new_div.style.background = `linear-gradient(to left, ${tmp.join(",")})`;
+            new_div.style.margin = "3px 0px";
+
             fragement.appendChild(new_div);
         });
 
@@ -169,18 +170,10 @@
         target.style.width = "40%";
         target.style.height = "90%";
         target.style.padding = '20px';
-        target.style.gridTemplateColumns = `repeat(${ratios.length}, ${Math.floor(100 / ratios.length)}%)`;
-
-        console.log("fragement", fragement);
+        target.style.gridTemplateRows = `repeat(${ratios.length}, ${Math.floor(100 / ratios.length)}%)`;
+        target.style.float = "left";
 
         target.appendChild(fragement);
-
-
-
-
-
-
     </script>
 </body>
-
 </html>
