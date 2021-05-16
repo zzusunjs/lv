@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>使用html and css进行可视化</title>
+    <style>
+        html, body{
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .outter{
+            height: 100%;
+            width: 100%;
+            
+        }
+        .top, .bottom{
+            height: 50%;
+            width: 100%;
+        }
+        .left, .right{
+            float: left;
+            width: 33%;
+            height: 100%;
+            background-color: #ccc;
+        }
+        .middle {
+            float: left;
+            width: 34%;
+            height: 100%;
+            background-color: #fff;
+        }
+        
+    </style>
+</head>
+<body>
+    <!-- 2-1浏览器中实现可视化的四种方式 -->
+    <div class="outter">
+        <div class="top">
+            <div class="left">
+                
+            </div>
+            <div class="middle"></div>
+            <div class="right"></div>
+        </div>
+        <div class="bottom">
+
+        </div>
+    </div>
+</body>
+</html>
