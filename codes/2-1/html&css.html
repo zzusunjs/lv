@@ -133,6 +133,10 @@
             clip-path: path('M20, 50 L70, 30 L90, 40 L110, 20 L160, 10 L200, 20 L280, 10 L290 50 Z');
             /* clip-path: path('M 0 200 L 0,75 A 5,5 0,0,1 150,75 L 200 200 z'); */
         }
+        /* div + transform 拟合折线图需要事先做较为复杂的计算，且波动较大的曲线需要多个div来拟合，不划算 */
+        /* clip-path 需要预先计算 类似于 svg 路径的内容，既然如此，为何不用svg呢 */
+        /* https://developer.mozilla.org/zh-CN/docs/Web/CSS/clip-path */
+        /* https://developer.mozilla.org/zh-CN/docs/Web/CSS/transform */
         
     </style>
 </head>
