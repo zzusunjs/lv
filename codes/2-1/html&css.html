@@ -74,8 +74,25 @@
         .barchart div:nth-child(5) {
             background: linear-gradient(to bottom, transparent 10%, #37c 10%, #37c 30%, #3c7 30%, #3c7 40%, orange 0%);
         }
+
         /* 线性渐变 https://developer.mozilla.org/zh-CN/docs/Web/CSS/CSS_Images/Using_CSS_gradients */
         /* transparent 10% 表示 0到10% 的范围为透明, #37c 10%, #37c 30%表示10%到30%的范围为颜色#37c, orange 0%表示从上一个范围边界到100%为颜色 orange, 推测是一种简写方式。*/
+
+        .middle {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .piechart {
+            width: 300px;
+            height: 300px;
+            display: block;
+            border-radius: 50%;
+            background: red;
+        }
+        /* piechart中使用的锥形渐变 conic gradient 还没有形成稳定的版本，所以无法在mdn中查找到对应的文档 */
+        /* https://www.cnblogs.com/cangqinglang/p/14761668.html */
     </style>
 </head>
 
@@ -95,7 +112,11 @@
 
                 </div>
             </div>
-            <div class="middle"></div>
+            <div class="middle">
+                <div class="piechart">
+
+                </div>
+            </div>
             <div class="right"></div>
         </div>
         <div class="bottom">
@@ -104,9 +125,9 @@
     </div>
     <script>
         let data = {
-            protein: [40, 43, 44, 45, 50, 60, 66, 70, 70, 70, 70],
-            vegetable: [40, 50, 40, 40, 40, 40, 40, 30, 30, 30, 30],
-            carbohydrate: [20, 7, 16, 15, 10, 0, 4, 10, 10, 10, 10]
+            protein: [40, 43, 44, 45, 50, 60, 66, 70, 70, 70, 70, 70, 70],
+            vegetable: [40, 50, 40, 40, 40, 40, 40, 30, 30, 30, 30, 70, 70],
+            carbohydrate: [20, 7, 16, 15, 10, 0, 4, 10, 10, 10, 10, 70, 70]
         };
 
         function deepCloneArray(source) {
@@ -174,6 +195,35 @@
         target.style.float = "left";
 
         target.appendChild(fragement);
+
+
+        // piechart 
+        let piechartData = [10, 20, 30, 40, 50, 60];
+            sums = 0;
+        piechartData.forEach(item => {
+            sums += item;
+        });
+        let piechartRatios = piechartData.map((item, idx) => {
+            return  item / sums * 100;
+        });
+        for(let i=1; i<piechartRatios.length-1; ++i){
+            piechartRatios[i] += piechartRatios[i-1]; 
+        }
+        piechartRatios[piechartRatios.length-1] = 0;
+        let parameterString = [`${colors[0]} ${piechartRatios[0]}%`];
+
+        for (let i = 1; i < piechartRatios.length - 1; ++i) {
+            parameterString.push(`${colors[i % colors.length]} ${piechartRatios[i-1]}%`);
+            parameterString.push(`${colors[i % colors.length]} ${piechartRatios[i]}%`);
+        }
+        parameterString.push(`${colors[(piechartRatios.length - 1) % colors.length]} 0%`);
+
+        console.log("parameterstring, ", parameterString);
+
+        const piechart = document.querySelector(".piechart");
+        piechart.style.background = `conic-gradient(${parameterString.join(",")})`;
+
     </script>
 </body>
+
 </html>
