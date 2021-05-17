@@ -78,7 +78,7 @@
         /* 线性渐变 https://developer.mozilla.org/zh-CN/docs/Web/CSS/CSS_Images/Using_CSS_gradients */
         /* transparent 10% 表示 0到10% 的范围为透明, #37c 10%, #37c 30%表示10%到30%的范围为颜色#37c, orange 0%表示从上一个范围边界到100%为颜色 orange, 推测是一种简写方式。*/
 
-        .middle {
+        .middle, .right{
             display: flex;
             justify-content: center;
             align-items: center;
@@ -93,6 +93,47 @@
         }
         /* piechart中使用的锥形渐变 conic gradient 还没有形成稳定的版本，所以无法在mdn中查找到对应的文档 */
         /* https://www.cnblogs.com/cangqinglang/p/14761668.html */
+
+        .linechart{
+            width: 360px;
+            height: 300px;
+            background-color: seagreen;
+        }
+
+        .linechart div{
+            height: 2px;
+            width: 70px;
+        }
+        .linechart div:nth-child(1){
+            transform: translate(20px, 280px) rotate(0deg);
+            background-color: salmon;
+        }
+        .linechart div:nth-child(2){
+            transform: translate(90px, 272px) rotate(-10deg);
+            background-color: pink;
+        }
+        .linechart div:nth-child(3){
+            transform: translate(158px, 252px) rotate(-20deg);
+            background-color: orange;
+        }
+        .linechart div:nth-child(4){
+            transform: translate(220px, 220px) rotate(-30deg);
+            background-color: rebeccapurple;
+        }
+        .linechart div:nth-child(5){
+            transform: translate(256px, 168px) rotate(-80deg);
+            background-color: white;
+        }
+        .linechart div:nth-child(6){
+            height: 60px;
+            width: 300px;
+            transform: translate(20px, 50px) ;
+            background-color: tomato;
+            border: 1px solid tomato;
+            clip-path: path('M20, 50 L70, 30 L90, 40 L110, 20 L160, 10 L200, 20 L280, 10 L290 50 Z');
+            /* clip-path: path('M 0 200 L 0,75 A 5,5 0,0,1 150,75 L 200 200 z'); */
+        }
+        
     </style>
 </head>
 
@@ -117,7 +158,16 @@
 
                 </div>
             </div>
-            <div class="right"></div>
+            <div class="right">
+                <div class="linechart">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+            </div>
         </div>
         <div class="bottom">
 
